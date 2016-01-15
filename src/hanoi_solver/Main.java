@@ -5,7 +5,7 @@ import java.util.ArrayList;
 public class Main {
 	
 	// constants
-	private final static String USAGE = "Usage: java hanoi_solver [NUMBER OF PIECES]";
+	private final static String USAGE = "Usage: java -jar hanoi_solver.jar [NUMBER OF PIECES]";
 	private final static int NUM_PEGS = 3;
 	
 	// variables
