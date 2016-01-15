@@ -62,7 +62,7 @@ public class Main {
 		
 		// test the number of supplied arguments
 		if(args.length != 1) {
-			System.err.println(USAGE);
+			System.err.println("\n" + USAGE);
 			return;
 		}
 		
@@ -70,7 +70,7 @@ public class Main {
 		try {
 			num_pieces = Integer.parseInt(args[0]);
 		} catch(NumberFormatException e) {
-			System.err.println(USAGE + "\nDid you input an integer?");
+			System.err.println("\n" + USAGE + "\nDid you input an integer?");
 			return;
 		}
 
