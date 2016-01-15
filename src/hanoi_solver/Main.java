@@ -36,22 +36,24 @@ public class Main {
 	
 	// try to move the largest piece to the correct peg
 	private static void movePiece(int piece_index, int destination_index) {
-		boolean try_again = true;
 		Piece piece = pieces.get(piece_index);
+		Peg source = piece.getPeg();
 		Peg destination = pegs.get(destination_index);
-		while(try_again) {
+		// loop the try/catch statement until it completes successfully
+		while(true) {
 			try {
 				// try to move the piece to the requested peg
-				piece.getPeg().remove(piece);
+				source.remove(piece);
 				destination.add(piece);
-				System.out.println("move piece " + (piece_index + 1) + " to peg " + (destination_index + 1));
+				System.out.println("  piece " + (piece_index + 1) + " to peg " + (char)('A' + destination_index));
+				// if the piece just moved was not the smallest piece, move the next smallest piece on top of it
 				if(piece.getId() > 0) {
 					movePiece(piece_index - 1, piece.getPeg().getId());
 				}
-				try_again = false;
+				break;
 			} catch (BadMoveException e) {
 				// if it doesn't work, try moving the next smallest piece to the other free peg
-				movePiece(piece_index - 1, calculateNextDestination(piece.getPeg().getId(), destination_index));
+				movePiece(piece_index - 1, calculateNextDestination(source.getId(), destination_index));
 			}
 		}
 	}
@@ -68,12 +70,12 @@ public class Main {
 		try {
 			num_pieces = Integer.parseInt(args[0]);
 		} catch(NumberFormatException e) {
-			System.err.println(USAGE + "\nDid you supply an integer?");
+			System.err.println(USAGE + "\nDid you input an integer?");
 			return;
 		}
 
 		// print documentation
-		System.out.println("\nPiece 1 is the smallest and peg 1 is the farthest to the left.");
+		System.out.println("\nPiece 1 is the smallest and peg A is the farthest to the left.");
 		
 		// create arrays of peg and piece objects
 		for(int i = 0; i < NUM_PEGS; i++) {
@@ -93,14 +95,18 @@ public class Main {
 		}
 		
 		// status message
-		System.out.println("\nInitialized successfully! Load " + num_pieces + " pieces onto peg 1.\n");
-		System.out.println("The shortest possible solution requires " + calculateSteps(num_pieces) + " moves:");
+		System.out.println("Initialization successful! Load " + num_pieces + " pieces onto peg A.\n");
+		if(num_pieces > 1) {
+			System.out.println("To play a perfect game, perform these " + calculateSteps(num_pieces) + " moves:");
+		} else {
+			System.out.println("To play a perfect game, perform this move:");
+		}
 		
 		// start the recursion: try to move the biggest piece to the last peg
 		movePiece(pieces.size() - 1, pegs.size() - 1);
 		
 		// success!
-		System.out.println("\nYou have completed the Tower of Hanoi puzzle! Revel in your glory!\n");
+		System.out.println("\nYou have completed the Tower of Hanoi! Revel in your glory!\n");
 		return;
 	}
 }
