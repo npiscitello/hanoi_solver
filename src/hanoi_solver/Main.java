@@ -31,36 +31,28 @@ public class Main {
 				new_destination = 0;
 			}
 		}
-		System.out.println("new_destination: " + new_destination);
-		return new_destination;
-	}
-	
-	// calculate the previous destination (used exclusively in movePiece())
-	private static int calculatePrevDestination(int location, int destination) {
-		int new_destination = destination;
-		while(new_destination == location || new_destination == destination) {
-			new_destination--;
-			if(new_destination < 0) {
-				new_destination = NUM_PEGS - 1;
-			}
-		}
-		System.out.println("new_destination: " + new_destination);
 		return new_destination;
 	}
 	
 	// try to move the largest piece to the correct peg
 	private static void movePiece(int piece_index, int destination_index) {
+		boolean try_again = true;
 		Piece piece = pieces.get(piece_index);
 		Peg destination = pegs.get(destination_index);
-		try {
-			// try to move the piece to the requested peg
-			System.out.println("Trying to move piece " + piece_index + " to peg " + destination_index);
-			piece.getPeg().remove(piece);
-			destination.add(piece);
-			System.out.println("Piece " + piece_index + " moved to peg " + destination_index);
-		} catch (BadMoveException e) {
-			// if it doesn't work, try moving the next smallest piece to the other free peg
-			movePiece(piece_index - 1, calculateNextDestination(piece.getPeg().getId(), destination_index));
+		while(try_again) {
+			try {
+				// try to move the piece to the requested peg
+				piece.getPeg().remove(piece);
+				destination.add(piece);
+				System.out.println("move piece " + (piece_index + 1) + " to peg " + (destination_index + 1));
+				if(piece.getId() > 0) {
+					movePiece(piece_index - 1, piece.getPeg().getId());
+				}
+				try_again = false;
+			} catch (BadMoveException e) {
+				// if it doesn't work, try moving the next smallest piece to the other free peg
+				movePiece(piece_index - 1, calculateNextDestination(piece.getPeg().getId(), destination_index));
+			}
 		}
 	}
 
@@ -79,6 +71,9 @@ public class Main {
 			System.err.println(USAGE + "\nDid you supply an integer?");
 			return;
 		}
+
+		// print documentation
+		System.out.println("\nPiece 1 is the smallest and peg 1 is the farthest to the left.");
 		
 		// create arrays of peg and piece objects
 		for(int i = 0; i < NUM_PEGS; i++) {
@@ -98,10 +93,14 @@ public class Main {
 		}
 		
 		// status message
-		System.out.println("Initialized successfully! " + num_pieces + " pieces were loaded onto the first peg.");
-		System.out.println("The shortest possible solution requires " + calculateSteps(num_pieces) + " moves...");
+		System.out.println("\nInitialized successfully! Load " + num_pieces + " pieces onto peg 1.\n");
+		System.out.println("The shortest possible solution requires " + calculateSteps(num_pieces) + " moves:");
 		
 		// start the recursion: try to move the biggest piece to the last peg
 		movePiece(pieces.size() - 1, pegs.size() - 1);
+		
+		// success!
+		System.out.println("\nYou have completed the Tower of Hanoi puzzle! Revel in your glory!\n");
+		return;
 	}
 }
