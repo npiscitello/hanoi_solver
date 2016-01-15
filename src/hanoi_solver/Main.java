@@ -119,7 +119,7 @@ public class Main {
 			return;
 		} else {
 			// if the solution is too big to be printed...
-			System.out.println("To play a perfect game, " + num_steps + " steps must be performed.");
+			System.out.println("\nTo play a perfect game, " + num_steps + " steps must be performed.");
 			System.out.println("Printing of the instruction set has been disabled due to its length.");
 			if(print_thresh == PRINT_THRESH_DEFAULT) {
 				System.out.println("To override the default threshold (" + PRINT_THRESH_DEFAULT + " steps), use:");
