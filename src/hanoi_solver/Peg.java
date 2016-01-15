@@ -13,12 +13,19 @@ public class Peg {
 		id = serial_id;
 	}
 	
+	// return the peg ID
+	public int getId() {
+		return id;
+	}
+	
 	// add a piece to the peg - throws a BadMoveException if it's not a valid add
 	public void add(Piece piece) throws BadMoveException {
 		if(contents.isEmpty()) {
 			contents.add(piece);
+			piece.setPeg(this);
 		} else if(piece.getId() < contents.get(contents.size() - 1).getId()) {
 			contents.add(piece);
+			piece.setPeg(this);
 		} else {
 			throw new BadMoveException("Trying to put a large piece onto a smaller piece");
 		}
@@ -28,6 +35,7 @@ public class Peg {
 	public void remove(Piece piece) throws BadMoveException {
 		if(piece.getId() == contents.get(contents.size() - 1).getId()) {
 			contents.remove(contents.size() - 1);
+			piece.setPeg(null);
 		} else {
 			throw new BadMoveException("Trying to remove a piece that is not on the top of the stack");
 		}
