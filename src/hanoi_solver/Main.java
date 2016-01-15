@@ -95,10 +95,12 @@ public class Main {
 		}
 		
 		// status message
-		System.out.println("Initialization successful! Load " + num_pieces + " pieces onto peg A.\n");
 		if(num_pieces > 1) {
+
+			System.out.println("Initialization successful! Load " + num_pieces + " pieces onto peg A.\n");
 			System.out.println("To play a perfect game, perform these " + calculateSteps(num_pieces) + " moves:");
 		} else {
+			System.out.println("Initialization successful! Load " + num_pieces + " piece onto peg A.\n");
 			System.out.println("To play a perfect game, perform this move:");
 		}
 		
