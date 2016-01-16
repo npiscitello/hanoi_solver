@@ -13,7 +13,7 @@ import org.apache.commons.cli.ParseException;
 public class Main {
 	
 	// constants
-	private final static String USAGE = "Usage: java -jar hanoi_solver.jar [NUMBER OF PIECES]";
+	private final static String USAGE = "java -jar hanoi_solver.jar";
 	private final static int NUM_PEGS = 3;
 	private final static int PRINT_THRESH_DEFAULT = 100;
 	private final static String PIECE_FLAG = "p";
@@ -90,13 +90,13 @@ public class Main {
 			}
 		} catch (ParseException e) {
 			HelpFormatter help = new HelpFormatter();
-			help.printHelp("hanoi-solver",
+			help.printHelp(USAGE,
 					   "Displays the optimal solution to a Tower of Hanoi puzzle.", 
 					   options, "", true);
 			return;
 		} catch (NumberFormatException e) {
 			HelpFormatter help = new HelpFormatter();
-			help.printHelp("java -jar hanoi-solver.jar",
+			help.printHelp(USAGE,
 					   "Displays the optimal solution to a Tower of Hanoi puzzle.", 
 					   options, 
 					   "Did you supply valid integers?",
