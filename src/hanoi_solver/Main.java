@@ -2,18 +2,32 @@ package hanoi_solver;
 
 import java.util.ArrayList;
 
+import org.apache.commons.cli.CommandLine;
+import org.apache.commons.cli.CommandLineParser;
+import org.apache.commons.cli.DefaultParser;
+import org.apache.commons.cli.HelpFormatter;
+import org.apache.commons.cli.Option;
+import org.apache.commons.cli.Options;
+import org.apache.commons.cli.ParseException;
+
 public class Main {
 	
 	// constants
 	private final static String USAGE = "Usage: java -jar hanoi_solver.jar [NUMBER OF PIECES]";
 	private final static int NUM_PEGS = 3;
 	private final static int PRINT_THRESH_DEFAULT = 100;
+	private final static String PIECE_FLAG = "p";
+	private final static String THRESH_FLAG = "t";
 	
 	// variables
 	private static int print_thresh = PRINT_THRESH_DEFAULT;
 	private static int num_pieces;
 	private static ArrayList<Peg> pegs = new ArrayList<>();
 	private static ArrayList<Piece> pieces = new ArrayList<>();
+	
+	// objects
+	private static Options options = new Options();
+	private static CommandLineParser parser = new DefaultParser();
 	
 	// calculate the lowest number of steps required for a solution
 	private static long calculateSteps(int num_pieces) {
@@ -60,28 +74,36 @@ public class Main {
 		}
 	}
 
+	// main program execution
 	public static void main(String[] args) {
 		
-		// test the number of supplied arguments
-		if(args.length != 1 && args.length != 2) {
-			System.err.println("\n" + USAGE);
+		// receive and parse command line options
+		Option pieces_opt = new Option(PIECE_FLAG, true, "number of pieces");
+		pieces_opt.setRequired(true);
+		options.addOption(pieces_opt);
+		options.addOption(THRESH_FLAG, true, "instruction set length threshold");
+		try {
+			CommandLine cli = parser.parse(options, args);
+			num_pieces = Integer.parseInt(cli.getOptionValue(PIECE_FLAG));
+			if(cli.getOptionValue(THRESH_FLAG) != null) {
+				print_thresh = Integer.parseInt(cli.getOptionValue(THRESH_FLAG));
+			}
+		} catch (ParseException e) {
+			HelpFormatter help = new HelpFormatter();
+			help.printHelp("hanoi-solver",
+					   "Displays the optimal solution to a Tower of Hanoi puzzle.", 
+					   options, "", true);
+			return;
+		} catch (NumberFormatException e) {
+			HelpFormatter help = new HelpFormatter();
+			help.printHelp("java -jar hanoi-solver.jar",
+					   "Displays the optimal solution to a Tower of Hanoi puzzle.", 
+					   options, 
+					   "Did you supply valid integers?",
+					   true);
 			return;
 		}
 		
-		// test the type of the supplied argument(s)
-		try {
-			if(args.length == 1) {
-				num_pieces = Integer.parseInt(args[0]);
-			} else if(args.length == 2) {
-				print_thresh = Integer.parseInt(args[0]);
-				num_pieces = Integer.parseInt(args[1]);
-			}
-			
-		} catch(NumberFormatException e) {
-			System.err.println("\n" + USAGE + "\nDid you input an integer?");
-			return;
-		}
-
 		// create arrays of peg and piece objects
 		for(int i = 0; i < NUM_PEGS; i++) {
 			pegs.add(new Peg(i));
